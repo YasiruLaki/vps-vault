@@ -1,8 +1,8 @@
 # VPS Manager
 
-[![Go Version](https://img.shields.io/github/go-mod/go-version/YasiruLaki/vps-vault)](https://github.com/YasiruLaki/vps-vault/blob/main/go.mod)
-[![Release](https://img.shields.io/github/v/release/YasiruLaki/vps-vault)](https://github.com/YasiruLaki/vps-vault/releases)
-[![License](https://img.shields.io/github/license/YasiruLaki/vps-vault)](https://github.com/YasiruLaki/vps-vault/blob/main/LICENSE)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/YasiruLaki/vps)](https://github.com/YasiruLaki/vps/blob/main/go.mod)
+[![Release](https://img.shields.io/github/v/release/YasiruLaki/vps)](https://github.com/YasiruLaki/vps/releases)
+[![License](https://img.shields.io/github/license/YasiruLaki/vps)](https://github.com/YasiruLaki/vps/blob/main/LICENSE)
 
 A lightweight CLI tool to save, list, remove, and connect to VPS servers quickly using named entries.
 
@@ -35,12 +35,12 @@ echo "$PATH"
 Install with Go:
 
 ```bash
-go install github.com/YasiruLaki/vps-vault@latest
+go install github.com/YasiruLaki/vps@latest
 ```
 
 Repository:
 
-- https://github.com/YasiruLaki/vps-vault
+- https://github.com/YasiruLaki/vps
 
 After installation, make sure your Go bin directory is in your `PATH`.
 

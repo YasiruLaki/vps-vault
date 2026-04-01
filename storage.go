@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 )
 
@@ -28,18 +27,16 @@ func nameExists(name string, vpsList []VPSData) bool {
 	return false
 }
 
-func saveVPS(newVPS []VPSData, jsonPath string) {
+func saveVPS(newVPS []VPSData, jsonPath string) error {
 	data, err := json.MarshalIndent(newVPS, "", "  ")
 	if err != nil {
-		fmt.Println("An error occurred while saving VPS data.")
-		return
+		return err
 	}
 
 	err = os.WriteFile(jsonPath, data, 0644)
-
 	if err != nil {
-		fmt.Println("An error occurred while writing VPS data to file.")
-	} else {
-		fmt.Println("VPS data saved successfully. Run 'vps list' to see your updated VPS list.")
+		return err
 	}
+
+	return nil
 }

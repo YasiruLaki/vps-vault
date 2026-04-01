@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -31,12 +32,17 @@ func addVPS(name, ip, user string, port int) {
 
 	vpsList := loadVPS(jsonPath)
 	if nameExists(name, vpsList) {
-		fmt.Printf("A VPS with the name '%s' already exists. Please choose a different name. Run 'vps --help' for more information.\n", name)
+		fmt.Printf("Error: a VPS with the name '%s' already exists. Choose a different name. Run 'vps --help' for more information.\n", name)
 		return
 	}
 
 	vpsList = append(vpsList, newVPS)
-	saveVPS(vpsList, jsonPath)
+	if err := saveVPS(vpsList, jsonPath); err != nil {
+		fmt.Println("Error: failed to save VPS data.")
+		return
+	}
+
+	fmt.Printf("Success: VPS '%s' added. Run 'vps list' to see your updated VPS list.\n", name)
 }
 
 func listVPS() {
@@ -71,12 +77,16 @@ func removeVPS(name string) {
 	}
 
 	if !found {
-		fmt.Printf("No VPS found with the name '%s'. Run 'vps list' to see your current VPS entries.\n", name)
+		fmt.Printf("Error: no VPS found with the name '%s'. Run 'vps list' to see your current VPS entries.\n", name)
 		return
 	}
 
-	saveVPS(updatedList, jsonPath)
-	fmt.Printf("VPS with the name '%s' has been removed. Run 'vps list' to see your updated VPS list.\n", name)
+	if err := saveVPS(updatedList, jsonPath); err != nil {
+		fmt.Println("Error: failed to save VPS data.")
+		return
+	}
+
+	fmt.Printf("Success: VPS '%s' removed. Run 'vps list' to see your updated VPS list.\n", name)
 }
 
 func connectVPS(name string) {
@@ -96,20 +106,25 @@ func connectVPS(name string) {
 	}
 
 	if targetVPS == nil {
-		fmt.Printf("No VPS found with the name '%s'. Run 'vps list' to see your current VPS entries.\n", name)
+		fmt.Printf("Error: no VPS found with the name '%s'. Run 'vps list' to see your current VPS entries.\n", name)
 		return
 	}
 
-	fmt.Printf("Connecting to VPS '%s' at %s:%d as user '%s'...\n", targetVPS.Name, targetVPS.IP, targetVPS.Port, targetVPS.User)
+	fmt.Printf("Info: connecting to VPS '%s' at %s:%d as user '%s'...\n", targetVPS.Name, targetVPS.IP, targetVPS.Port, targetVPS.User)
 
-	execCmd := fmt.Sprintf("ssh -p %d %s@%s", targetVPS.Port, targetVPS.User, targetVPS.IP)
-	cmd := exec.Command("sh", "-c", execCmd)
-	cmd.Stdout = nil
-	cmd.Stderr = nil
+	remote := fmt.Sprintf("%s@%s", targetVPS.User, targetVPS.IP)
+	cmd := exec.Command("ssh", "-p", fmt.Sprintf("%d", targetVPS.Port), remote)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Failed to connect to VPS '%s'. Please check your SSH configuration and try again.\n", targetVPS.Name)
+		fmt.Printf("Error: failed to connect to VPS '%s'. Check your SSH configuration and try again.\n", targetVPS.Name)
+		return
 	}
+
+	fmt.Printf("Info: SSH session ended for VPS '%s'.\n", targetVPS.Name)
 }
 
 func printHelp() {
@@ -126,7 +141,7 @@ Commands:
   connect <name>                      Connect to a VPS using its name.
 
 Examples:
-  vps add myserver
+	vps add myserver 203.0.113.10 ubuntu 22
   vps list
   vps remove myserver
   vps connect myserver

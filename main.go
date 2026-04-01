@@ -7,7 +7,7 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Please provide a command. Run 'vps --help' for more information.")
+		fmt.Println("Error: please provide a command. Run 'vps --help' for more information.")
 		return
 	}
 
@@ -16,7 +16,7 @@ func main() {
 	switch command {
 	case "add":
 		if len(os.Args) < 5 {
-			fmt.Println("Insufficient arguments for 'add' command. Run 'vps --help' for more information.")
+			fmt.Println("Error: insufficient arguments for 'add' command. Run 'vps --help' for more information.")
 			return
 		}
 		name := os.Args[2]
@@ -31,14 +31,14 @@ func main() {
 		listVPS()
 	case "remove":
 		if len(os.Args) < 3 {
-			fmt.Println("Insufficient arguments for 'remove' command. Run 'vps --help' for more information.")
+			fmt.Println("Error: insufficient arguments for 'remove' command. Run 'vps --help' for more information.")
 			return
 		}
 		name := os.Args[2]
 		removeVPS(name)
 	case "connect":
 		if len(os.Args) < 3 {
-			fmt.Println("Insufficient arguments for 'connect' command. Run 'vps --help' for more information.")
+			fmt.Println("Error: insufficient arguments for 'connect' command. Run 'vps --help' for more information.")
 			return
 		}
 		name := os.Args[2]
@@ -47,6 +47,6 @@ func main() {
 	case "--help":
 		printHelp()
 	default:
-		fmt.Printf("Unknown command: %s. Run 'vps --help' for more information.\n", command)
+		fmt.Printf("Error: unknown command '%s'. Run 'vps --help' for more information.\n", command)
 	}
 }
